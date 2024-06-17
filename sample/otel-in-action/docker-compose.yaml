@@ -1,9 +1,11 @@
+version: '3.8'
+
 networks:
   todonet:
 
 services:
 
-### APPLICATION PART
+  ### APPLICATION PART
 
   postgresdb:
     image: postgres
@@ -31,15 +33,15 @@ services:
     depends_on:
       - postgresdb
 
-  todoui-thymeleaf:
-    image: maeddes/todoui-thymeleaf:hse24
+  todoui-kotlin:
     build:
-      context: ./todoui-thymeleaf
-      dockerfile: Dockerfile #-multistage
+      context: ./todoui-kotlin
+      dockerfile: Dockerfile
     networks:
       - todonet
     ports:
       - "8090:8090"
     environment:
       - BACKEND_URL=http://todobackend-springboot:8080/
-
+    depends_on:
+      - todobackend-springboot
