@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <script src="https://unpkg.com/mithril/mithril.js"></script>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+    const Todo = {
+        list: [],
+        loadTodos: function() {
+            m.request({
+                method: "GET",
+                url: "http://localhost:8080/todos/"
+            }).then(function(response) {
+                Todo.list = response;
+            });
+        },
+        addTodo: function(todo) {
+            m.request({
+                method: "POST",
+                url: "http://localhost:8080/todos/" + encodeURIComponent(todo)
+            }).then(function(response) {
+                Todo.loadTodos();
+            });
+        },
+        removeTodo: function(todo) {
+            m.request({
+                method: "DELETE",
+                url: "http://localhost:8080/todos/" + encodeURIComponent(todo)
+            }).then(function(response) {
+                Todo.loadTodos();
+            });
+        }
+    };
+
+    const TodoForm = {
+        view: function() {
+            return m("form", {
+                onsubmit: function(e) {
+                    e.preventDefault();
+                    const todoInput = e.target.querySelector("input");
+                    if (todoInput.value.trim() !== "") {
+                        Todo.addTodo(todoInput.value.trim());
+                        todoInput.value = "";
+                    }
+                }
+            }, [
+                m("input", { type: "text", placeholder: "Add new todo..." }),
+                m("button", { type: "submit" }, "Add")
+            ]);
+        }
+    };
+
+    const TodoList = {
+        view: function() {
+            return m("ul", Todo.list.map(function(todo) {
+                return m("li", [
+                    todo,
+                    m("button", {
+                        onclick: function() {
+                            Todo.removeTodo(todo);
+                        }
+                    }, "Remove")
+                ]);
+            }));
+        }
+    };
+
+    const App = {
+        oninit: function() {
+            Todo.loadTodos();
+        },
+        view: function() {
+            return m("div", [
+                m(TodoForm),
+                m(TodoList)
+            ]);
+        }
+    };
+
+    m.mount(document.getElementById("app"), App);
+</script>
+
+</body>
+</html>

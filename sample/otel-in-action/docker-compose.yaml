@@ -1,5 +1,3 @@
-version: '3.8'
-
 networks:
   todonet:
 
@@ -33,15 +31,17 @@ services:
     depends_on:
       - postgresdb
 
-  todoui-kotlin:
+  frontend:
+    container_name: new-frontend
     build:
-      context: ./todoui-kotlin
+      context: ./todoui-mithril
       dockerfile: Dockerfile
+    depends_on:
+      - todobackend-springboot
     networks:
       - todonet
     ports:
-      - "8090:8090"
+      - "80:80"
     environment:
       - BACKEND_URL=http://todobackend-springboot:8080/
-    depends_on:
-      - todobackend-springboot
+

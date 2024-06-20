@@ -13,8 +13,8 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="spring-boot-rest" options="-parameters" />
-      <module name="spring-sample" options="-parameters" />
+      <module name="spring-boot-rest" options="" />
+      <module name="spring-sample" options="" />
     </option>
   </component>
 </project>
