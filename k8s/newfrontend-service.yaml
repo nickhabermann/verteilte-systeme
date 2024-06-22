@@ -3,15 +3,15 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: todoui
-  name: todoui
+    app: newfrontend
+  name: newfrontend
 spec:
   ports:
-  - port: 8090
+  - port: 80
     protocol: TCP
-    targetPort: 8090
+    targetPort: 80
   selector:
-    app: todoui
+    app: newfrontend
   type: LoadBalancer
 status:
   loadBalancer: {}

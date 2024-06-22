@@ -43,5 +43,5 @@ services:
     ports:
       - "80:80"
     environment:
-      - BACKEND_URL=http://todobackend-springboot:8080/
+      - BACKEND_URL=http://localhost:8080
 

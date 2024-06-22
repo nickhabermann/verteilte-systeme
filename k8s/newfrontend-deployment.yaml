@@ -3,26 +3,26 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: todoui
-  name: todoui
+    app: newfrontend
+  name: newfrontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: todoui
+      app: newfrontend
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: todoui
+        app: newfrontend
         tier: frontend
     spec:
       containers:
-      - image: maeddes/todoui-thymeleaf:hse24patched
+      - image: nickhabermann2001/todo_newfrontend
         env:
         - name: BACKEND_URL
-          value: "http://todobackend:8080"
+          value: "http://localhost:8080"
         name: lab
         resources: {}
 status: {}

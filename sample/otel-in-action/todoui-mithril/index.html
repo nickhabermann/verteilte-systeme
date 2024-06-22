@@ -16,7 +16,7 @@
         loadTodos: function() {
             m.request({
                 method: "GET",
-                url: "http://localhost:8080/todos/"
+                url: "$BACKEND_URL/todos/"
             }).then(function(response) {
                 Todo.list = response;
             });
@@ -24,33 +24,32 @@
         addTodo: function(todo) {
             m.request({
                 method: "POST",
-                url: "http://localhost:8080/todos/" + encodeURIComponent(todo)
-            }).then(function(response) {
+                url: "$BACKEND_URL/todos/" + encodeURIComponent(todo)
+            }).then(function() {
                 Todo.loadTodos();
             });
         },
         removeTodo: function(todo) {
             m.request({
                 method: "DELETE",
-                url: "http://localhost:8080/todos/" + encodeURIComponent(todo)
-            }).then(function(response) {
+                url: "$BACKEND_URL/todos/" + encodeURIComponent(todo)
+            }).then(function() {
                 Todo.loadTodos();
             });
         }
     };
 
     const TodoForm = {
+        onsubmit: function(e) {
+            e.preventDefault();
+            const todoInput = e.target.querySelector("input");
+            if (todoInput.value.trim() !== "") {
+                Todo.addTodo(todoInput.value.trim());
+                todoInput.value = "";
+            }
+        },
         view: function() {
-            return m("form", {
-                onsubmit: function(e) {
-                    e.preventDefault();
-                    const todoInput = e.target.querySelector("input");
-                    if (todoInput.value.trim() !== "") {
-                        Todo.addTodo(todoInput.value.trim());
-                        todoInput.value = "";
-                    }
-                }
-            }, [
+            return m("form", { onsubmit: TodoForm.onsubmit }, [
                 m("input", { type: "text", placeholder: "Add new todo..." }),
                 m("button", { type: "submit" }, "Add")
             ]);
@@ -58,15 +57,14 @@
     };
 
     const TodoList = {
+        onclick: function(todo) {
+            Todo.removeTodo(todo);
+        },
         view: function() {
             return m("ul", Todo.list.map(function(todo) {
                 return m("li", [
                     todo,
-                    m("button", {
-                        onclick: function() {
-                            Todo.removeTodo(todo);
-                        }
-                    }, "Remove")
+                    m("button", { onclick: function() { TodoList.onclick(todo); } }, "Remove")
                 ]);
             }));
         }
